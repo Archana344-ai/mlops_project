@@ -1,18 +1,24 @@
 import streamlit as st
 import pickle
 import numpy as np
-import pandas as pd
 
-# Load model
-with open('artifacts/model.pkl', 'rb') as f:
+# Load model and label names
+with open('artifacts/iris_model.pkl', 'rb') as f:
     model = pickle.load(f)
 
-st.title('Simple ML Model')
+with open('artifacts/target_names.pkl', 'rb') as f:
+    target_names = pickle.load(f)
 
-feature1 = st.number_input('Feature 1', value=0)
-feature2 = st.number_input('Feature 2', value=0)
+st.title("🌸 Iris Flower Classifier")
+
+st.write("Enter the flower's features below:")
+
+sepal_length = st.slider('Sepal length (cm)', 4.0, 8.0, 5.1)
+sepal_width = st.slider('Sepal width (cm)', 2.0, 4.5, 3.5)
+petal_length = st.slider('Petal length (cm)', 1.0, 7.0, 1.4)
+petal_width = st.slider('Petal width (cm)', 0.1, 2.5, 0.2)
 
 if st.button('Predict'):
-    input_df = pd.DataFrame([[feature1, feature2]], columns=['feature1', 'feature2'])
-    prediction = model.predict(input_df)
-    st.write('Prediction:', int(prediction[0]))
+    features = np.array([[sepal_length, sepal_width, petal_length, petal_width]])
+    prediction = model.predict(features)[0]
+    st.success(f"🌼 Predicted Species: {target_names[prediction]}")

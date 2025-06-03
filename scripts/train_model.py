@@ -1,20 +1,21 @@
-import pandas as pd
+from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
 import pickle
 
-# Sample dataset
-data = pd.DataFrame({
-    'feature1': [2, 4, 6, 8],
-    'feature2': [1, 3, 5, 7],
-    'label': [0, 0, 1, 1]
-})
+# Load Iris dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
 
-X = data[['feature1', 'feature2']]
-y = data['label']
-
-model = LogisticRegression()
+# Train/test split (optional, we use all data here)
+model = LogisticRegression(max_iter=200)
 model.fit(X, y)
 
 # Save the model
-with open('artifacts/model.pkl', 'wb') as f:
+with open('artifacts/iris_model.pkl', 'wb') as f:
     pickle.dump(model, f)
+
+# Save target names too (so we know what 0, 1, 2 mean)
+with open('artifacts/target_names.pkl', 'wb') as f:
+    pickle.dump(iris.target_names, f)
